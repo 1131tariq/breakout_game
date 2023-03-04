@@ -16,7 +16,7 @@ last_player_move_time = time.time()
 
 
 def start_game():
-    global x_move, y_move, score, game_on, x_coord, y_coord
+    global x_move, y_move, score, game_on, x_coord, y_coord, all_blocks
     global start_instruction
     display.onkeypress(None, "space")
     x_move = 10
@@ -29,12 +29,15 @@ def start_game():
     ball.goto(player.xcor() + 50, player.ycor())
     display.tracer(True)
     while game_on:
-        if len(all_blocks) == 0:
-            x_coord = -450
-            y_coord = 220
-            generate_blocks()
         time.sleep(move_speed)
         move_ball()
+
+        if len(all_blocks) == 2:
+            x_coord = -450
+            y_coord = 220
+            bounce()
+            generate_blocks()
+
         if ball.xcor() > 469 or ball.xcor() < -469:
             bounce()
 
@@ -68,7 +71,9 @@ def start_game():
                     display.tracer(False)
                     i.hideturtle()
                     hitblocks()
+                    print(len(all_blocks))
                     all_blocks.remove(i)
+                    print(len(all_blocks))
                     i.goto(-1000, 1000)
                     score += 1
                     scoreboard.clear()
@@ -153,7 +158,6 @@ def generate_blocks():
         block.goto(x_coord, y_coord)
         block.showturtle()
         x_coord += 60
-        print(x_coord)
         if x_coord > 450:
             y_coord += 41
             x_coord = -450
